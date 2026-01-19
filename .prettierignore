@@ -1,0 +1,3 @@
+# Ignorar archivos EJS porque Prettier no puede parsear correctamente la sintaxis de templates
+*.ejs
+views/**/*.ejs
