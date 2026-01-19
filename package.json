@@ -1,0 +1,30 @@
+{
+  "dependencies": {
+    "ejs": "^4.0.1",
+    "express": "^5.2.1"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.11"
+  },
+  "name": "dwes-proyecto-suenyos-valenti",
+  "version": "1.0.0",
+  "description": "La empresa Sueños Valenti quiere lanzar una página web para gestionar sesiones grupales de conexión con la supra conciencia, donde los usuarios puedan:",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "nodemon app.js",
+    "start": "node app.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jonathanjs-daw-dev/proyecto-suenyos-valenti-entorno-servidor.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/jonathanjs-daw-dev/proyecto-suenyos-valenti-entorno-servidor/issues"
+  },
+  "homepage": "https://github.com/jonathanjs-daw-dev/proyecto-suenyos-valenti-entorno-servidor#readme"
+}
