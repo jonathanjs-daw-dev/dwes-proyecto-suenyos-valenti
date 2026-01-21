@@ -7,63 +7,81 @@
     <title>Sueños Valenti - Registro</title>
   </head>
   <body>
-    <form action="/signup" method="post">
-      <label for="name">
-        Nombre:
-        <input type="text" name="name" id="name-input" required value="<%= name || '' %>" />
-      </label>
-      <br>
-      <label for="age">
-        Edad:
-        <input type="number" min="0" max="150" name="age" id="age-input" required value="<%= age || '' %>" />
-      </label>
-      <br>
-      <label for="email">
-        Email:
-        <input type="email" name="email" id="email-input" required value="<%= email || '' %>" />
-      </label>
-      <br>
-      <label for="city">
-        Ciudad: 
-        <select name="city" id="cities-select" required>
-          <option value="">-- selecciona uno --</option>
-          <option value="madrid" <%= city === 'madrid' ? 'selected' : '' %> >Madrid</option>
-          <option value="barcelona" <%= city === 'barcelona' ? 'selected' : '' %> >Barcelona</option>
-          <option value="valencia" <%= city === 'valencia' ? 'selected' : '' %> >Valencia</option>
-          <option value="sevilla" <%= city === 'sevilla' ? 'selected' : '' %> >Sevilla</option>
-          <option value="bilbao" <%= city === 'bilbao' ? 'selected' : '' %> >Bilbao</option>
-          <option value="lugo" <%= city === 'lugo' ? 'selected' : '' %> >Lugo</option>
-          <option value="burgos" <%= city === 'burgos' ? 'selected' : '' %> >Burgos</option>
-          <option value="malaga" <%= city === 'malaga' ? 'selected' : '' %> >Málaga</option>
-          <option value="segovia" <%= city === 'segovia' ? 'selected' : '' %> >Segovia</option>
-        </select>
-      </label>
-      <br>
-      <fieldset>
-        <label>
-            Deportes:
-            <input type="checkbox" name="interests" value="deportes" id="sports-checkbox" <%= (interests||[]).includes('deportes') ? 'checked' : '' %> />
+    <h1>Registro</h1>
+    <% if (typeof errors !== 'undefined' && errors.length) { %>
+      <section id="display-errors-section">
+        <h3>Por favor corrige los errores</h3>
+        <ul>
+          <% errors.forEach((error) => { %>
+            <li><strong><%= error %></strong></li>
+          <% }) %>
+        </ul>
+      </section>
+    <% } %>
+    <section id="signup-form-section">
+      <form action="/signup" method="post">
+        <label for="name">
+          Nombre *:
+          <input type="text" name="name" id="name-input" required value="<%= name || '' %>" />
         </label>
-        <label>
-            Videojuegos:
-            <input type="checkbox" name="interests" value="videojuegos" id="videogames-checkbox" <%= (interests||[]).includes('videojuegos') ? 'checked' : '' %> />
+        <br>
+        <label for="age">
+          Edad *:
+          <input type="number" min="0" max="150" name="age" id="age-input" required value="<%= age || '' %>" />
         </label>
-        <label>
-            Música:
-            <input type="checkbox" name="interests" value="musica" id="music-checkbox" <%= (interests||[]).includes('musica') ? 'checked' : '' %> />
+        <br>
+        <label for="email">
+          Email *:
+          <input type="email" name="email" id="email-input" required value="<%= email || '' %>" />
         </label>
-        <label>
-            Cocina:
-            <input type="checkbox" name="interests" value="cocina" id="cook-checkbox" <%= (interests||[]).includes('cocina') ? 'checked' : '' %> />
+        <br>
+        <label for="city">
+          Ciudad *: 
+          <select name="city" id="cities-select" required>
+            <option value="">-- selecciona uno --</option>
+            <option value="madrid" <%= city === 'madrid' ? 'selected' : '' %> >Madrid</option>
+            <option value="barcelona" <%= city === 'barcelona' ? 'selected' : '' %> >Barcelona</option>
+            <option value="valencia" <%= city === 'valencia' ? 'selected' : '' %> >Valencia</option>
+            <option value="sevilla" <%= city === 'sevilla' ? 'selected' : '' %> >Sevilla</option>
+            <option value="bilbao" <%= city === 'bilbao' ? 'selected' : '' %> >Bilbao</option>
+            <option value="lugo" <%= city === 'lugo' ? 'selected' : '' %> >Lugo</option>
+            <option value="burgos" <%= city === 'burgos' ? 'selected' : '' %> >Burgos</option>
+            <option value="malaga" <%= city === 'malaga' ? 'selected' : '' %> >Málaga</option>
+            <option value="segovia" <%= city === 'segovia' ? 'selected' : '' %> >Segovia</option>
+          </select>
         </label>
-        <label>
-            Viajar:
-            <input type="checkbox" name="interests" value="viajar" id="travel-checkbox" <%= (interests||[]).includes('viajar') ? 'checked' : '' %> />
-        </label>
-      </fieldset>
-      <br>
-      <button type="submit">Enviar</button>
-    </form>
-    <p><a href="/"">Volver al inicio</a></p>
+        <br>
+        <fieldset>
+          <label>
+              Deportes:
+              <input type="checkbox" name="interests" value="deportes" id="sports-checkbox" <%= (interests||[]).includes('deportes') ? 'checked' : '' %> />
+          </label>
+          <label>
+              Videojuegos:
+              <input type="checkbox" name="interests" value="videojuegos" id="videogames-checkbox" <%= (interests||[]).includes('videojuegos') ? 'checked' : '' %> />
+          </label>
+          <label>
+              Música:
+              <input type="checkbox" name="interests" value="musica" id="music-checkbox" <%= (interests||[]).includes('musica') ? 'checked' : '' %> />
+          </label>
+          <label>
+              Cocina:
+              <input type="checkbox" name="interests" value="cocina" id="cook-checkbox" <%= (interests||[]).includes('cocina') ? 'checked' : '' %> />
+          </label>
+          <label>
+              Viajar:
+              <input type="checkbox" name="interests" value="viajar" id="travel-checkbox" <%= (interests||[]).includes('viajar') ? 'checked' : '' %> />
+          </label>
+        </fieldset>
+        <br>
+        <button type="submit">Enviar</button>
+      </form>
+    </section>
+    <section id="controls-section">
+      <div>
+        <p>Los campos con asterisco (*) son obligatorios.</p>
+      </div>
+      <p><a href="/"">Volver al inicio</a></p>
+    </section>
   </body>
 </html>
