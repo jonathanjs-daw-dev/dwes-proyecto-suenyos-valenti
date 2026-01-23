@@ -4,15 +4,17 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="style.css">
-  <title>Perfil</title>
+  <title>Preferencias</title>
 </head>
 <body class="<%= themeColor %>">
-  <h1>Perfil</h1>
+  <h1>Preferencias</h1>
   <section>
-    <p>Usuario: <strong><%= user %></strong></p>
-    <form action="/logout" method="post">
-      <button>Cerrar sesión</button>
-    </form>
+    <% if (user) { %>
+      <h4>Usuario: <%= user %></h4>
+    <% } %>
+    <h4>Color del tema: <%= themeColor %></h4>
+    <p><a href="/theme/light">Tema Claro</a></p>
+    <p><a href="/theme/dark">Tema Oscuro</a></p>
   </section>
   <section>
     <p><a href="/">Volver al inicio</a></p>

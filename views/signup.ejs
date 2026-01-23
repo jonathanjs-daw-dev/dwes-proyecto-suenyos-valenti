@@ -6,7 +6,7 @@
     <link rel="stylesheet" href="style.css">
     <title>Sueños Valenti - Registro</title>
   </head>
-  <body>
+  <body class="<%= themeColor %>">
     <h1>Registro</h1>
     <% if (typeof errors !== 'undefined' && errors.length) { %>
       <section id="display-errors-section">
@@ -76,11 +76,11 @@
         <br>
         <button type="submit">Enviar</button>
       </form>
-    </section>
-    <section id="controls-section">
       <div>
         <p>Los campos con asterisco (*) son obligatorios.</p>
       </div>
+    </section>
+    <section>
       <p><a href="/">Volver al inicio</a></p>
     </section>
   </body>

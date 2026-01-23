@@ -2,6 +2,7 @@
 const express = require("express"); // framework express para la creacion de servidores web
 const path = require("path"); // modulo path, utilidad nativa de node.js para trabajar con rutas de archivos independientemente del OS
 const session = require("express-session");
+const cookieParser = require("cookie-parser");
 
 //inicializamos la aplicacion express
 const app = express();
@@ -30,12 +31,22 @@ app.use(
 //configuracion del motor de plantillas (view engine) ejs para el uso de datos dinamicos en html, iteraciones, bucles, etc...
 app.set("view engine", "ejs");
 
+// middleware para comprobar que esta autenticado
 const authRequired = (req, res, next) => {
   if (req.session.user) {
     return next();
   }
   res.redirect("/login");
 };
+
+// Parseo de cookies
+app.use(cookieParser());
+
+// middleware para el themeColor
+app.use((req, res, next) => {
+  res.locals.themeColor = req.cookies.theme || "light"; // res.locals es un objeto que express pasa automaticamente a todas las plantillas ejs 
+  next();
+});
 
 app.get("/signup", (req, res) => {
   res.render("signup", {
@@ -148,6 +159,21 @@ app.post("/logout", (req, res) => {
   req.session.destroy(() => res.redirect("/"));
 });
 
+app.get("/theme/:mode", (req, res) => {
+  const themeColor = req.params.mode;
+  res.cookie("theme", themeColor, {
+    httpOnly: true,
+    maxAge: 1000 * 60 * 60 * 24 * 7, // 7 dias de vida del cookie
+  });
+  res.redirect("/preferences");
+});
+
+app.get("/preferences", (req, res) => {
+  const user = req.session.user;
+  res.render("preferences", {
+    user,
+  });
+});
 
 app.listen(PORT, () => {
   console.log(`Servidor escuchando en http://localhost:${PORT}`);
