@@ -7,17 +7,23 @@
   <title>Preferencias</title>
 </head>
 <body class="<%= themeColor %>">
-  <h1>Preferencias</h1>
-  <section>
-    <% if (user) { %>
-      <h4>Usuario: <%= user %></h4>
-    <% } %>
-    <h4>Color del tema: <%= themeColor %></h4>
-    <p><a href="/theme/light">Tema Claro</a></p>
-    <p><a href="/theme/dark">Tema Oscuro</a></p>
-  </section>
-  <section>
-    <p><a href="/">Volver al inicio</a></p>
-  </section>
+  <%- include('./partials/header') %>
+  <main>
+    <h3>Preferencias</h3>
+    <section>
+      <% if (user) { %>
+        <h4>Usuario: <%= user %></h4>
+      <% } %>
+      <h4>Color del tema: <%= themeColor %></h4>
+    </section>
+    <section>
+      <p><a href="/theme/light">Tema Claro</a></p>
+      <p><a href="/theme/dark">Tema Oscuro</a></p>
+    </section>
+    <section>
+      <p><a href="/">Volver al inicio</a></p>
+    </section>
+  </main>
+  <%- include('./partials/footer') %>
 </body>
 </html>

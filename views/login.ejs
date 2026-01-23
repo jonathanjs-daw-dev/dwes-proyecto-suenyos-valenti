@@ -7,12 +7,12 @@
   <title>Autenticación</title>
 </head>
 <body class="<%= themeColor %>">
-  <h1>Autenticación</h1>
-  <p>Página de autenticación</p>
-  <p>Para simular una autenticación se puede hacer con un correo y una contraseña falsa.</p>
-   <% if (typeof errors !== 'undefined' && errors.length) { %>
+  <%- include('./partials/header') %>
+  <main>
+    <h3>Autenticación</h3>
+    <% if (typeof errors !== 'undefined' && errors.length) { %>
       <section id="display-errors-section">
-        <h3>Por favor corrige los errores</h3>
+        <h4>Por favor corrige los errores</h4>
         <ul>
           <% errors.forEach((error) => { %>
             <li><strong><%= error %></strong></li>
@@ -20,15 +20,22 @@
         </ul>
       </section>
     <% } %>
-  <section>
-    <form action="/login" method="post">
-      <label for="user">Nombre: <input type="email" name="user" value="<%= user || '' %>"></label><br>
-      <label for="password">Contraseña: <input type="password" name="password" ></label><br>
-      <button>Enviar</button>
-    </form>
-  </section>
-  <section>
-    <p><a href="/">Volver al inicio</a></p>
-  </section>
+    <% if (!user) { %>
+      <section>
+        <p>Para simular una autenticación se puede hacer con un correo y una contraseña falsa.</p>
+        <form action="/login" method="post">
+          <label for="user">Nombre: <input type="email" name="user" value="<%= user || '' %>"></label><br>
+          <label for="password">Contraseña: <input type="password" name="password" ></label><br>
+          <button>Enviar</button>
+        </form>
+      </section>
+    <% } else { %>
+      <p>Ya estas autenticado, el usuario es <%= user %></p>
+    <% } %>
+    <section>
+      <p><a href="/">Volver al inicio</a></p>
+    </section>
+  </main>
+  <%- include('./partials/footer') %>
 </body>
 </html>

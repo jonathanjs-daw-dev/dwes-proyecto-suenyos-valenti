@@ -13,6 +13,11 @@ const PORT = 3001;
 //app.use() registra un middleware que se ejecutara en todas las peticiones.
 //express.static() que sirve archivos estaticos (html, css, js, imagenes)
 app.use(express.static(path.join(__dirname, "public")));
+
+//configuracion del motor de plantillas (view engine) ejs para el uso de datos dinamicos en html, iteraciones, bucles, etc...
+app.set("view engine", "ejs");
+app.set("views", path.join(__dirname, "views"));
+
 //express.urlencoded() que parsea (analiza) datos de formularios que viajan codificados en el body de la peticion cuando el formulario envia con metodo post
 //el middleware convierte esos datos en un objeto js accesible mediante req.body
 //sin este middleware req.body seria undefined.
@@ -28,8 +33,6 @@ app.use(
     },
   }),
 );
-//configuracion del motor de plantillas (view engine) ejs para el uso de datos dinamicos en html, iteraciones, bucles, etc...
-app.set("view engine", "ejs");
 
 // middleware para comprobar que esta autenticado
 const authRequired = (req, res, next) => {
@@ -44,17 +47,26 @@ app.use(cookieParser());
 
 // middleware para el themeColor
 app.use((req, res, next) => {
-  res.locals.themeColor = req.cookies.theme || "light"; // res.locals es un objeto que express pasa automaticamente a todas las plantillas ejs 
+  res.locals.themeColor = req.cookies.theme || "light"; // res.locals es un objeto que express pasa automaticamente a todas las plantillas ejs
   next();
 });
 
+app.get("/", (req, res) => {
+  const user = req.session.user;
+  res.render("index", {
+    user,
+  });
+});
+
 app.get("/signup", (req, res) => {
+  const user = req.session.user;
   res.render("signup", {
     name: "",
     age: "",
     city: "",
     email: "",
     interests: [],
+    user,
   });
 });
 
@@ -108,6 +120,7 @@ app.post("/signup", (req, res) => {
       city,
       interests,
       errors, //ademas pasamos el array de errores para mostrar al usuario.
+      user
     });
   }
   //C) exito
@@ -119,8 +132,9 @@ app.post("/signup", (req, res) => {
 
 // GET /login - Muestra el formulario de login
 app.get("/login", (req, res) => {
+  const user = req.session.user;
   res.render("login", {
-    user: "",
+    user,
     password: "",
     errors: [],
   });

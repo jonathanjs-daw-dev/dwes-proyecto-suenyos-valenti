@@ -6,13 +6,11 @@
     <link rel="stylesheet" href="style.css" />
     <title>Sueños Valenti</title>
   </head>
-  <body>
-    <header>
-      <h1>Sueños Valenti</h1>
-      <h3>Portal de Sesiones de Supra Conciencia</h3>
-      <p>Sesiones grupales para conectar con tu supra conciencia</p>
-    </header>
+  <body class="<%= themeColor %>">
+    <%- include('./partials/header') %>
     <main>
+      <h3>Página de inicio</h3>
+      <section><h4>Sesiones grupales para conectar con tu supra conciencia</h4></section><br>
       <ul>
         <li><a href="/login">Autenticación</a></li>
         <li><a href="/signup">Registro</a></li>
@@ -21,6 +19,6 @@
         <li><a href="/sessions">Sesiones</a></li>
       </ul>
     </main>
-    <footer>DWES Proyecto Evaluable - Jonathan Jiménez Salazar</footer>
+    <%- include('./partials/footer') %>
   </body>
 </html>

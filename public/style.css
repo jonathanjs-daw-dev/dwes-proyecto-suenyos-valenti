@@ -4,6 +4,17 @@
   box-sizing: border-box;
 }
 
+/* Layout principal con flexbox para sticky footer */
+html {
+  height: 100%;
+}
+
+body {
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
 body.light {
   background-color: #e2e2e2;
   color: #0a2463;
@@ -12,6 +23,40 @@ body.light {
 body.dark {
   background-color: #0a2463;
   color: #e2e2e2;
+}
+
+/* Header - altura automática según contenido */
+header {
+  flex-shrink: 0;
+  padding: 1rem;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+body.light header {
+  border-bottom: 2px solid #0a2463;
+}
+body.dark header {
+  border-bottom: 2px solid #e2e2e2;
+}
+
+/* Main - ocupa todo el espacio restante */
+main {
+  flex: 1 0 auto;
+  padding: 2rem 1rem;
+}
+
+/* Footer - siempre al fondo */
+footer {
+  flex-shrink: 0;
+  padding: 1rem;
+  margin-top: auto;
+}
+body.light footer {
+  border-top: 2px solid #0a2463;
+}
+body.dark footer {
+  border-top: 2px solid #e2e2e2;
 }
 
 body.light a {
@@ -62,4 +107,12 @@ body.dark a:focus {
   outline: 2px solid #6fa8dc;
   outline-offset: 2px;
   border-radius: 2px;
+}
+
+section {
+  margin: 1rem 0rem;
+}
+
+#display-errors-section {
+  color: #cc3300;
 }
