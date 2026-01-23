@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="style.css">
+  <title>Autenticación</title>
+</head>
+<body>
+  <h1>Autenticación</h1>
+  <p>Página de autenticación</p>
+  <p>Para simular una autenticación se puede hacer con un correo y una contraseña falsa.</p>
+   <% if (typeof errors !== 'undefined' && errors.length) { %>
+      <section id="display-errors-section">
+        <h3>Por favor corrige los errores</h3>
+        <ul>
+          <% errors.forEach((error) => { %>
+            <li><strong><%= error %></strong></li>
+          <% }) %>
+        </ul>
+      </section>
+    <% } %>
+  <section>
+    <form action="/login" method="post">
+      <label for="user">Nombre: <input type="email" name="user" value="<%= user || '' %>"></label><br>
+      <label for="password">Contraseña: <input type="password" name="password" ></label><br>
+      <button>Enviar</button>
+    </form>
+  </section>
+  <section>
+    <p><a href="/">Volver al inicio</a></p>
+  </section>
+</body>
+</html>

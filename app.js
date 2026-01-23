@@ -1,6 +1,7 @@
 //importacion de modulos (dependencias)
 const express = require("express"); // framework express para la creacion de servidores web
 const path = require("path"); // modulo path, utilidad nativa de node.js para trabajar con rutas de archivos independientemente del OS
+const session = require("express-session");
 
 //inicializamos la aplicacion express
 const app = express();
@@ -15,9 +16,26 @@ app.use(express.static(path.join(__dirname, "public")));
 //el middleware convierte esos datos en un objeto js accesible mediante req.body
 //sin este middleware req.body seria undefined.
 app.use(express.urlencoded({ extended: true })); // extended: true permite parsear objetos complejos y arrays. (false solo parsea strings y arrays simples)
-
+app.use(
+  session({
+    secret: "secret-key",
+    resave: false,
+    saveUninitialized: false,
+    cookie: {
+      httpOnly: true,
+      maxAge: 1000 * 60 * 30, // 30 minutos
+    },
+  }),
+);
 //configuracion del motor de plantillas (view engine) ejs para el uso de datos dinamicos en html, iteraciones, bucles, etc...
 app.set("view engine", "ejs");
+
+const authRequired = (req, res, next) => {
+  if (req.session.user) {
+    return next();
+  }
+  res.redirect("/login");
+};
 
 app.get("/signup", (req, res) => {
   res.render("signup", {
@@ -87,6 +105,49 @@ app.post("/signup", (req, res) => {
   //- guardamos los datos JSON con un redirect a la home "/"
   //TODO
 });
+
+// GET /login - Muestra el formulario de login
+app.get("/login", (req, res) => {
+  res.render("login", {
+    user: "",
+    password: "",
+    errors: [],
+  });
+});
+
+// POST /login - Procesa los datos del formulario
+app.post("/login", (req, res) => {
+  const user = req.body.user;
+  const password = req.body.password;
+  let errors = [];
+
+  if (!user || !user.includes("@")) {
+    errors.push(
+      "El email de usuario no es válido, no debe estar vacio y debe contener @.",
+    );
+  }
+  if (!password || password.trim() === "") {
+    errors.push("La contraseña no puede estar vacia.");
+  }
+
+  if (errors.length) {
+    return res.status(401).render("login", { user, password: "", errors });
+  }
+
+  // Login exitoso - guardar en sesión
+  req.session.user = user;
+  res.redirect("/profile"); // Redirige a la página profile
+});
+
+app.get("/profile", authRequired, (req, res) => {
+  const user = req.session.user;
+  res.render("profile", { user });
+});
+
+app.post("/logout", (req, res) => {
+  req.session.destroy(() => res.redirect("/"));
+});
+
 
 app.listen(PORT, () => {
   console.log(`Servidor escuchando en http://localhost:${PORT}`);
