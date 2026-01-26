@@ -9,15 +9,15 @@
 <body class="<%= themeColor %>">
   <%- include('./partials/header') %>
   <main>
+    <section>
+      <p><a href="/">< Volver al inicio</a></p>
+    </section>
     <h3>Perfil</h3>
     <section>
       <p>Usuario: <strong><%= user %></strong></p><br>
       <form action="/logout" method="post">
         <button>Cerrar sesión</button>
       </form>
-    </section>
-    <section>
-      <p><a href="/">Volver al inicio</a></p>
     </section>
   </main>
   <%- include('./partials/footer') %>

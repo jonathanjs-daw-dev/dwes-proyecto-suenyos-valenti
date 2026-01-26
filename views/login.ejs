@@ -9,6 +9,9 @@
 <body class="<%= themeColor %>">
   <%- include('./partials/header') %>
   <main>
+    <section>
+      <p><a href="/">< Volver al inicio</a></p>
+    </section>
     <h3>Autenticación</h3>
     <% if (typeof errors !== 'undefined' && errors.length) { %>
       <section id="display-errors-section">
@@ -24,17 +27,14 @@
       <section>
         <p>Para simular una autenticación se puede hacer con un correo y una contraseña falsa.</p>
         <form action="/login" method="post">
-          <label for="user">Nombre: <input type="email" name="user" value="<%= user || '' %>"></label><br>
-          <label for="password">Contraseña: <input type="password" name="password" ></label><br>
+          <label for="user">Nombre: <br><input id="user" type="email" name="user" value="<%= user || '' %>"></label>
+          <label for="password">Contraseña: <br><input id="password" type="password" name="password" ></label>
           <button>Enviar</button>
         </form>
       </section>
     <% } else { %>
       <p>Ya estas autenticado, el usuario es <%= user %></p>
     <% } %>
-    <section>
-      <p><a href="/">Volver al inicio</a></p>
-    </section>
   </main>
   <%- include('./partials/footer') %>
 </body>

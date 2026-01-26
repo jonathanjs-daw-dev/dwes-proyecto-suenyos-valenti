@@ -9,6 +9,9 @@
   <body class="<%= themeColor %>">
     <%- include('./partials/header') %>
     <main>
+      <section>
+        <p><a href="/">< Volver al inicio</a></p>
+      </section>
       <h3>Registro</h3>
       <% if (typeof errors !== 'undefined' && errors.length) { %>
         <section id="display-errors-section">
@@ -24,22 +27,23 @@
         <form action="/signup" method="post">
           <label for="name">
             Nombre *:
-            <input type="text" name="name" id="name-input" required value="<%= name || '' %>" />
+            <br>
+            <input type="text" name="name" id="name" required value="<%= name || '' %>" />
           </label>
-          <br>
           <label for="age">
             Edad *:
-            <input type="number" min="0" max="150" name="age" id="age-input" required value="<%= age || '' %>" />
+            <br>
+            <input type="number" min="0" max="150" name="age" id="age" required value="<%= age || '' %>" />
           </label>
-          <br>
           <label for="email">
             Email *:
-            <input type="email" name="email" id="email-input" required value="<%= email || '' %>" />
+            <br>
+            <input type="email" name="email" id="email" required value="<%= email || '' %>" />
           </label>
-          <br>
-          <label for="city">
+          <label for="cities">
             Ciudad *: 
-            <select name="city" id="cities-select" required>
+            <br>
+            <select name="city" id="cities" required>
               <option value="">-- selecciona uno --</option>
               <option value="madrid" <%= city === 'madrid' ? 'selected' : '' %> >Madrid</option>
               <option value="barcelona" <%= city === 'barcelona' ? 'selected' : '' %> >Barcelona</option>
@@ -52,7 +56,6 @@
               <option value="segovia" <%= city === 'segovia' ? 'selected' : '' %> >Segovia</option>
             </select>
           </label>
-          <br>
           <fieldset>
             <label>
                 Deportes:
@@ -75,13 +78,9 @@
                 <input type="checkbox" name="interests" value="viajar" id="travel-checkbox" <%= (interests||[]).includes('viajar') ? 'checked' : '' %> />
             </label>
           </fieldset>
-          <br>
           <p>Los campos con asterisco (*) son obligatorios.</p><br>
           <button type="submit">Enviar</button>
         </form>
-      </section>
-      <section>
-        <p><a href="/">Volver al inicio</a></p>
       </section>
     </main>
     <%- include('./partials/footer') %>
