@@ -19,6 +19,23 @@
         <button>Cerrar sesión</button>
       </form>
     </section>
+
+    <h4>Carrito Espiritual</h4>
+    <section>
+      <% if (cart.length > 0) { %>
+        <ul>
+          <% cart.forEach(session => { %>
+            <li><%= session.name %> - <%= session.price %>€</li>
+          <% }) %>
+        </ul>
+        <p><strong>Total: <%= cart.reduce((sum, s) => sum + s.price, 0) %>€</strong></p>
+        <form action="/cart/clear" method="post">
+          <button type="submit">Vaciar carrito</button>
+        </form>
+      <% } else { %>
+        <p>Tu carrito está vacío. <a href="/sessions">Ver sesiones disponibles</a></p>
+      <% } %>
+    </section>
   </main>
   <%- include('./partials/footer') %>
 </body>

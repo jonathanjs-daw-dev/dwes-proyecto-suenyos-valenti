@@ -251,7 +251,10 @@ app.post("/login", async (req, res) => {
 app.get("/profile", authRequired, async (req, res) => {
   const user = req.session.user;
   await writeLog("VISITA_PERFIL", user);
-  res.render("profile", { user });
+  res.render("profile", {
+    user,
+    cart: req.session.cart || [],
+  });
 });
 
 app.post("/logout", async (req, res) => {
@@ -291,6 +294,34 @@ app.get("/sessions", async (req, res) => {
     user,
     sessions: sessionsList, //pasamos la lista de sesiones a la vista
   });
+});
+
+// POST /cart/add/:id - Añadir sesión al carrito
+app.post("/cart/add/:id", authRequired, async (req, res) => {
+  const sessionId = parseInt(req.params.id);
+  const user = req.session.user;
+
+  // Inicializar carrito si no existe
+  if (!req.session.cart) req.session.cart = [];
+
+  // Buscar la sesión en sessionsList
+  const session = sessionsList.find((s) => s.id === sessionId);
+
+  // Añadir solo si existe y no está ya en el carrito
+  if (session && !req.session.cart.find((s) => s.id === sessionId)) {
+    req.session.cart.push(session);
+    await writeLog(`AÑADIR_CARRITO_${session.name}`, user);
+  }
+
+  res.redirect("/sessions");
+});
+
+// POST /cart/clear - Vaciar carrito
+app.post("/cart/clear", authRequired, async (req, res) => {
+  const user = req.session.user;
+  req.session.cart = [];
+  await writeLog("VACIAR_CARRITO", user);
+  res.redirect("/profile");
 });
 
 app.listen(PORT, () => {
