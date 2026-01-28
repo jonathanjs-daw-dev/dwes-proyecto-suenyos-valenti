@@ -4,6 +4,8 @@ const path = require("path"); // modulo path, utilidad nativa de node.js para tr
 const session = require("express-session");
 const cookieParser = require("cookie-parser");
 
+const fs = require("fs/promises");
+
 //inicializamos la aplicacion express
 const app = express();
 //configuracion del puerto donde escuchara el servidor
@@ -70,7 +72,8 @@ app.get("/signup", (req, res) => {
   });
 });
 
-app.post("/signup", (req, res) => {
+app.post("/signup", async (req, res) => {
+  const user = req.session.user;
   //A) Captura de datos que vienen del formulario
   const name = req.body.name; //-
   const age = req.body.age;
@@ -120,14 +123,47 @@ app.post("/signup", (req, res) => {
       city,
       interests,
       errors, //ademas pasamos el array de errores para mostrar al usuario.
-      user
+      user,
     });
   }
   //C) exito
   //si estamos en este punto es que todo ha salido a pedir de Milhouse
   //por lo tanto lo que debemos hacer es:
   //- guardamos los datos JSON con un redirect a la home "/"
-  //TODO
+  try {
+    const dataPath = "./data";
+    const dataFile = `${dataPath}/usuarios.json`;
+    await fs.mkdir(dataPath, { recursive: true });
+    console.log(`Carpeta ${dataPath} lista`);
+
+    //escribir en la carpeta creada los datos json
+    let users = [];
+    //si ya existe el fichero con datos de usuarios, vamos a pillar y parsear el contenido y despues hacer push del usuario al array
+    //si no existe el fichero, simplemente hacemos push del nuevo usuario al array
+    try {
+      const content = await fs.readFile(dataFile, "utf-8");
+      users = JSON.parse(content);
+    } catch (error) {
+      // Si el archivo no existe, users queda como array vacío []
+      console.error("El archivo no existe aun.");
+    }
+
+    users.push({ name, age, email, city, interests });
+
+    //hacemos json.stringify de los datos
+    const usersJSON = JSON.stringify(users, null, 2);
+    console.log(`JSON generado de los usuarios ${usersJSON}`);
+
+    //los datos json van a ser un array de usuarios
+    await fs.writeFile(dataFile, usersJSON, "utf-8");
+    console.log(`Fichero ${dataFile} guardado`);
+
+    //final
+    res.redirect("/");
+  } catch (error) {
+    console.error("Error trabajando con ficheros: ", error);
+    res.status(500).send("Error al guardar usuario");
+  }
 });
 
 // GET /login - Muestra el formulario de login
