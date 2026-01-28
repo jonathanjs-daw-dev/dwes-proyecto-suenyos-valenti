@@ -11,6 +11,12 @@ const app = express();
 //configuracion del puerto donde escuchara el servidor
 const PORT = 3001;
 
+//rutas de archivos de datos
+//las definimos aqui arriba para reutilizarlas en toda la aplicacion
+const dataPath = "./data";
+const usersFile = `${dataPath}/usuarios.json`;
+const logsFile = `${dataPath}/logs.txt`;
+
 //middleware: funcion que se ejecuta entre la peticion del cliente y la respuesta del servidfor
 //app.use() registra un middleware que se ejecutara en todas las peticiones.
 //express.static() que sirve archivos estaticos (html, css, js, imagenes)
@@ -53,15 +59,39 @@ app.use((req, res, next) => {
   next();
 });
 
-app.get("/", (req, res) => {
+//funcion helper para registrar logs de acciones del usuario
+//usamos fs.appendFile para añadir lineas al final del archivo sin borrar lo anterior
+//esto es util para tener un historial de todo lo que pasa en la aplicacion
+const writeLog = async (action, user) => {
+  const date = new Date().toISOString(); // fecha en formato ISO (ej: 2026-01-28T10:15:30.123Z)
+  const username = user || "anonimo"; // si no hay usuario, ponemos "anonimo"
+  const line = `[${date}] ${action}: ${username}\n`; // formato de cada linea del log
+
+  try {
+    //nos aseguramos de que la carpeta data existe antes de escribir el log
+    //si ya existe no pasa nada gracias a recursive: true
+    await fs.mkdir(dataPath, { recursive: true });
+
+    //appendFile añade al final del archivo, si no existe lo crea
+    await fs.appendFile(logsFile, line, "utf-8");
+    console.log("Log registrado:", line.trim());
+  } catch (error) {
+    //si hay error al escribir el log, lo mostramos en consola pero no paramos la app
+    console.error("Error al escribir en el log:", error);
+  }
+};
+
+app.get("/", async (req, res) => {
   const user = req.session.user;
+  await writeLog("VISITA_HOME", user);
   res.render("index", {
     user,
   });
 });
 
-app.get("/signup", (req, res) => {
+app.get("/signup", async (req, res) => {
   const user = req.session.user;
+  await writeLog("VISITA_REGISTRO", user);
   res.render("signup", {
     name: "",
     age: "",
@@ -131,8 +161,7 @@ app.post("/signup", async (req, res) => {
   //por lo tanto lo que debemos hacer es:
   //- guardamos los datos JSON con un redirect a la home "/"
   try {
-    const dataPath = "./data";
-    const dataFile = `${dataPath}/usuarios.json`;
+    //nos aseguramos de que la carpeta data existe
     await fs.mkdir(dataPath, { recursive: true });
     console.log(`Carpeta ${dataPath} lista`);
 
@@ -141,7 +170,7 @@ app.post("/signup", async (req, res) => {
     //si ya existe el fichero con datos de usuarios, vamos a pillar y parsear el contenido y despues hacer push del usuario al array
     //si no existe el fichero, simplemente hacemos push del nuevo usuario al array
     try {
-      const content = await fs.readFile(dataFile, "utf-8");
+      const content = await fs.readFile(usersFile, "utf-8");
       users = JSON.parse(content);
     } catch (error) {
       // Si el archivo no existe, users queda como array vacío []
@@ -155,8 +184,11 @@ app.post("/signup", async (req, res) => {
     console.log(`JSON generado de los usuarios ${usersJSON}`);
 
     //los datos json van a ser un array de usuarios
-    await fs.writeFile(dataFile, usersJSON, "utf-8");
-    console.log(`Fichero ${dataFile} guardado`);
+    await fs.writeFile(usersFile, usersJSON, "utf-8");
+    console.log(`Fichero ${usersFile} guardado`);
+
+    //registramos en el log que un nuevo usuario se ha registrado
+    await writeLog("REGISTRO", email);
 
     //final
     res.redirect("/");
@@ -167,8 +199,9 @@ app.post("/signup", async (req, res) => {
 });
 
 // GET /login - Muestra el formulario de login
-app.get("/login", (req, res) => {
+app.get("/login", async (req, res) => {
   const user = req.session.user;
+  await writeLog("VISITA_LOGIN", user);
   res.render("login", {
     user,
     password: "",
@@ -177,7 +210,7 @@ app.get("/login", (req, res) => {
 });
 
 // POST /login - Procesa los datos del formulario
-app.post("/login", (req, res) => {
+app.post("/login", async (req, res) => {
   const user = req.body.user;
   const password = req.body.password;
   let errors = [];
@@ -197,20 +230,34 @@ app.post("/login", (req, res) => {
 
   // Login exitoso - guardar en sesión
   req.session.user = user;
+
+  //registramos en el log que el usuario ha iniciado sesion
+  await writeLog("LOGIN", user);
+
   res.redirect("/profile"); // Redirige a la página profile
 });
 
-app.get("/profile", authRequired, (req, res) => {
+app.get("/profile", authRequired, async (req, res) => {
   const user = req.session.user;
+  await writeLog("VISITA_PERFIL", user);
   res.render("profile", { user });
 });
 
-app.post("/logout", (req, res) => {
+app.post("/logout", async (req, res) => {
+  const user = req.session.user; //guardamos el usuario antes de destruir la sesion
+
+  //registramos en el log que el usuario ha cerrado sesion
+  await writeLog("LOGOUT", user);
+
+  //destruimos la sesion y redirigimos a la home
   req.session.destroy(() => res.redirect("/"));
 });
 
-app.get("/theme/:mode", (req, res) => {
+app.get("/theme/:mode", async (req, res) => {
+  const user = req.session.user;
   const themeColor = req.params.mode;
+  //registramos en el log el cambio de tema y a que color
+  await writeLog(`CAMBIO_TEMA_${themeColor.toUpperCase()}`, user);
   res.cookie("theme", themeColor, {
     httpOnly: true,
     maxAge: 1000 * 60 * 60 * 24 * 7, // 7 dias de vida del cookie
@@ -218,8 +265,9 @@ app.get("/theme/:mode", (req, res) => {
   res.redirect("/preferences");
 });
 
-app.get("/preferences", (req, res) => {
+app.get("/preferences", async (req, res) => {
   const user = req.session.user;
+  await writeLog("VISITA_PREFERENCIAS", user);
   res.render("preferences", {
     user,
   });
