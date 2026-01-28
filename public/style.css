@@ -115,6 +115,10 @@ section {
   color: #cc3300;
 }
 
+li {
+  margin: 0.5rem 0rem;
+}
+
 input[type="text"],
 input[type="email"],
 input[type="number"],

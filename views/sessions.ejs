@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="style.css">
+  <title>Sesiones</title>
+</head>
+<body class="<%= themeColor %>">
+  <%- include('./partials/header') %>
+  <main>
+    <section>
+      <p><a href="/">< Volver al inicio</a></p>
+    </section>
+    <h3>Sesiones Grupales</h3>
+    <p>Conecta con tu supra conciencia a través de nuestras sesiones</p>
+    <section>
+      <ul>
+        <% sessions.forEach(session => { %>
+          <li>
+            <strong><%= session.name %></strong> - <%= session.duration %> - <%= session.price %>€
+            <form action="/cart/add/<%= session.id %>" method="post" style="display: inline;">
+              <button type="submit">Añadir al carrito</button>
+            </form>
+          </li>
+        <% }) %>
+      </ul>
+    </section>
+  </main>
+  <%- include('./partials/footer') %>
+</body>
+</html>

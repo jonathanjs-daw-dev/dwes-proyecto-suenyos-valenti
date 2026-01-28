@@ -17,6 +17,17 @@ const dataPath = "./data";
 const usersFile = `${dataPath}/usuarios.json`;
 const logsFile = `${dataPath}/logs.txt`;
 
+//sesiones disponibles (datos mock)
+//estas son las sesiones grupales que ofrece Sueños Valenti
+const sessionsList = [
+  { id: 1, name: "Meditación Astral Guiada", price: 25, duration: "1h 30min" },
+  { id: 2, name: "Conexión con el Yo Superior", price: 35, duration: "2h" },
+  { id: 3, name: "Viaje a Vidas Pasadas ", price: 45, duration: "2h 30min" },
+  { id: 4, name: "Sanación con Cristales Han Nalhes", price: 30, duration: "1h" },
+  { id: 5, name: "Despertar de la Kundalini", price: 50, duration: "3h" },
+  { id: 6, name: "Lectura de Registros Akáshicos", price: 40, duration: "1h 30min" },
+];
+
 //middleware: funcion que se ejecuta entre la peticion del cliente y la respuesta del servidfor
 //app.use() registra un middleware que se ejecutara en todas las peticiones.
 //express.static() que sirve archivos estaticos (html, css, js, imagenes)
@@ -270,6 +281,15 @@ app.get("/preferences", async (req, res) => {
   await writeLog("VISITA_PREFERENCIAS", user);
   res.render("preferences", {
     user,
+  });
+});
+
+app.get("/sessions", async (req, res) => {
+  const user = req.session.user;
+  await writeLog("VISITA_SESIONES", user);
+  res.render("sessions", {
+    user,
+    sessions: sessionsList, //pasamos la lista de sesiones a la vista
   });
 });
 
